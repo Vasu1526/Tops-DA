@@ -1,0 +1,95 @@
+-- create company table
+
+create table company (
+    companyid int primary key,
+    companyname varchar(45),
+    street varchar(45),
+    city varchar(45),
+    state varchar(2),
+    zip varchar(10)
+);
+
+-- create contact table
+
+create table contact (
+    contactid int primary key,
+    companyid int,
+    firstname varchar(45),
+    lastname varchar(45),
+    street varchar(45),
+    city varchar(45),
+    state varchar(20),
+    zip varchar(10),
+    ismain boolean,
+    email varchar(45),
+    phone varchar(12),
+    foreign key (companyid) references company(companyid)
+);
+
+-- create employee table
+
+create table employee (
+    employeeid int primary key,
+    firstname varchar(45),
+    lastname varchar(45),
+    salary decimal(10,2),
+    hiredate date,
+    jobtitle varchar(25),
+    email varchar(45),
+    phone varchar(12)
+);
+
+-- create contactemployee table
+
+create table contactemployee (
+    contactemployeeid int primary key,
+    contactid int,
+    employeeid int,
+    contactdate date,
+    description varchar(100),
+    foreign key (contactid) references contact(contactid),
+    foreign key (employeeid) references employee(employeeid)
+);
+
+
+-- update lesley bland's phone number
+
+update employee
+set phone = '215-555-5555'
+where firstname = 'lesley' and lastname = 'bland';
+
+
+
+-- update urban outfitters inc. to urban outfitters
+
+update company
+set companyname = 'urban outfitters'
+where companyname = 'urban outfitters, inc.';
+
+
+
+-- find contactemployeeid for dianne connor and jack lee
+
+select ce.contactemployeeid
+from contactemployee ce
+join contact c on ce.contactid = c.contactid
+join employee e on ce.employeeid = e.employeeid
+where c.firstname = 'dianne' and c.lastname = 'connor'
+  and e.firstname = 'jack' and e.lastname = 'lee';
+
+
+-- delete specific contactemployee record
+
+delete from contactemployee
+where contactemployeeid = 100;
+
+
+
+-- select employees who contacted toll brothers
+
+select distinct e.firstname, e.lastname
+from employee e
+join contactemployee ce on e.employeeid = ce.employeeid
+join contact c on ce.contactid = c.contactid
+join company co on c.companyid = co.companyid
+where co.companyname = 'toll brothers';
