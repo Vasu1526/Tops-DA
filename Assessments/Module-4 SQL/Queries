@@ -1,0 +1,25 @@
+delimiter $$
+
+create trigger after_employee_insert after insert on employees
+for each row
+begin
+	insert into employee_audit(employee_id, name, position, salary, hire_date)
+    values (new.Employee_id, new.name, new.position, new.salary, new.hire_date);
+end $$
+
+delimiter ;
+
+delimiter $$
+
+create procedure addemployee(
+	in emp_name varchar(50),
+	in emp_position varchar(30),
+	in emp_salary decimal(10,2),
+	in emp_hire_date date
+)
+
+begin
+	insert into employees(name,position,salary, hire_date) values (emp_name, emp_position, emp_salary, emp_hire_date);
+end $$
+
+delimiter ;
